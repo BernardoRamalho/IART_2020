@@ -1,0 +1,4 @@
+.idea/
+TP1/.idea/
+TP1/__pycache__
+TP1/venv
