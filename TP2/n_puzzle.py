@@ -3,6 +3,7 @@ import math
 import copy
 import time
 from uninformed_search import Graph
+import informed_search
 
 
 ##############################
@@ -17,6 +18,7 @@ def get_zero_position(board):
         for j in range(len(board)):
             if board[i][j] == 0:
                 return i, j
+
 
 def validate_n_puzzle(board):
     width = 0
@@ -34,28 +36,6 @@ def validate_n_puzzle(board):
             height += 1
 
     return True
-
-
-def create_board(size):
-    random.seed()  # Initiate Random Generator
-    numbers_used = []  # List to keep track of numbers already used
-    board = [[]]  # Initial Board
-    width = 0
-    for i in range(size):
-        number = random.randint(0, size - 1)  # Generate Random Number
-
-        while number in numbers_used:  # If number already exists generate another until a new
-            number = random.randint(0, size - 1)  # is found
-
-        numbers_used.append(number)  # Add the new number to the list of used ones
-
-        board[width].append(number)
-
-        if (i + 1) % math.sqrt(size) == 0 and i + 1 < size:  # Checks if we reached the end of a line
-            board.append([])  # Create a new Line
-            width += 1
-
-    return list_of_list_to_tuple_of_tuples(board)
 
 
 def print_puzzle(board):
@@ -126,9 +106,6 @@ def operators(board):
     if zero_position[0] - 1 >= 0:
         board_states.append(move_up(zero_position, copy.deepcopy(board_list)))
 
-    if not board_states:
-        print("Failed")
-        print(board)
     return board_states
 
 
@@ -152,35 +129,92 @@ def tuple_of_tuples_to_list_of_lists(tuple_of_tuples):
     return list_of_lists
 
 
-options = {
-    "dfs": lambda graph: graph.dfs(),
-    "iterative": lambda graph: graph.iterative_dfs(),
-    "bfs": lambda graph: graph.bfs()
-}
-
-
-def question_2_1_b(graph):
+def question_2_1_b():
     start_time = time.time()
 
+    board = ((1, 6, 2),
+             (5, 7, 3),
+             (0, 4, 8))
+
+    graph = Graph(operators, validate_n_puzzle, board)
     graph.bfs()
-    print("It took", time.time() - start_time, "seconds to complete the computation.")
+
+    print("It took", time.time() - start_time, "seconds to complete the computation of question 2.1.b.")
+
+
+def question_2_1_c():
+    start_time = time.time()
+
+    end_board = ((1, 2, 3),
+                 (4, 5, 6),
+                 (7, 8, 0))
+
+    board = ((1, 6, 2),
+             (5, 7, 3),
+             (0, 4, 8))
+
+    print(board)
+    print("Which heuristic would you like to use:")
+    heuristic_func_number = int(input("1.Displaced Pieces\n2.Manhattan Distance\nPlease insert the desired number: "))
+
+    if heuristic_func_number != 1 and heuristic_func_number != 2:
+        print("Invalid number!")
+        return
+
+    informed_search.astar(board, end_board, operators, heuristic_func_number)
+
+    print("It took", time.time() - start_time, "seconds to complete the computation of question 2.1.c.")
+
+
+def question_2_1_d():
+    end_board_9 = ((1, 2, 3),
+                   (4, 5, 6),
+                   (7, 8, 0))
+
+    end_board_16 = ((1, 2, 3, 4),
+                    (5, 6, 7, 8),
+                    (9, 10, 11, 12),
+                    (13, 14, 15, 16))
+    print("Which heuristic would you like to use:")
+    heuristic_func_number = int(input("1.Displaced Pieces\n2.Manhattan Distance\nPlease insert the desired number: "))
+
+    # Resolve First Board
+    start_time = time.time()
+    prob1 = ((1, 2, 3),
+             (5, 0, 6),
+             (4, 7, 8))
+    informed_search.astar(prob1, end_board_9, operators, heuristic_func_number)
+    print("It took", time.time() - start_time, "seconds to complete the computation of Prob1.")
+
+    # Resolve Second Board
+    start_time = time.time()
+    prob2 = ((1, 3, 6),
+             (5, 2, 0),
+             (4, 7, 8))
+    informed_search.astar(prob2, end_board_9, operators, heuristic_func_number)
+    print("It took", time.time() - start_time, "seconds to complete the computation of Prob2.")
+
+    start_time = time.time()
+    prob3 = ((1, 6, 2),
+             (5, 7, 3),
+             (0, 4, 8))
+    informed_search.astar(prob3, end_board_9, operators, heuristic_func_number)
+    print("It took", time.time() - start_time, "seconds to complete the computation of Prob3.")
+
+    start_time = time.time()
+    prob4 = ((5, 1, 3, 4),
+             (2, 0, 7, 8),
+             (10, 6, 11, 12),
+             (9, 13, 14, 15))
+    informed_search.astar(prob4, end_board_16, operators, heuristic_func_number)
+    print("It took", time.time() - start_time, "seconds to complete the computation of Prob4.")
 
 
 def main():
-    start_time = time.time()
-
-    # Initialize the puzzle
-    puzzle_size = int(input("Introduce a size (must be perfect squares like 9 and 16): "))
-    puzzle = create_board(puzzle_size)
-    puzzles = ((1, 2, 3), (4, 5, 6), (7, 0, 8))
-
-
-    # Initialize the graph
-    graph = Graph(operators, validate_n_puzzle, puzzle)
-
-    # Run the Exercises
-    question_2_1_b(graph)
-    print("It took", time.time() - start_time, "seconds to complete the computation.")
+    # Exercises
+    #question_2_1_b()
+    #question_2_1_c()
+    #question_2_1_d()
 
 
 if __name__ == "__main__":
