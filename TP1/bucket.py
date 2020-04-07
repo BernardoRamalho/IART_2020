@@ -1,4 +1,5 @@
-from graph import Graph
+from TP1.tp1_graph import Graph
+import time
 
 
 def validate_buckets(buckets_state):
@@ -31,9 +32,19 @@ def get_all_operators(buckets_state):
 
 
 options = {
-    "dfs": lambda graph: graph.dfs((0, 0)),
-    "iterative": lambda graph: graph.iterative_dfs((0, 0)),
-    "bfs": lambda graph: graph.bfs((0, 0))
+    "dfs": lambda graph: graph.dfs(),
+    "iterative": lambda graph: graph.iterative_dfs(),
+    "bfs": lambda graph: graph.bfs()
 }
 
-options["iterative"](Graph(5, get_all_operators, validate_buckets))
+
+def main():
+    start_time = time.time()
+    graph = Graph(get_all_operators, validate_buckets, (0, 0))
+    mode = graph.ask_mode()
+    options[mode](graph)
+    print("It took", time.time() - start_time, "seconds to complete the computation.")
+
+
+if __name__ == "__main__":
+    main()

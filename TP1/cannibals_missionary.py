@@ -1,5 +1,5 @@
-from graph import Graph
-
+from TP1.tp1_graph import Graph
+import time
 
 def validate_function(banks):
     return banks[1][0] == 3 and banks[1][1] == 3 and banks[0][0] == 0 and banks[0][1] == 0
@@ -199,9 +199,16 @@ def operators(banks):
 banks = ((3, 3), (0, 0), False)
 
 options = {
-    "dfs": lambda graph: graph.dfs(banks),
-    "iterative": lambda graph: graph.iterative_dfs(banks),
-    "bfs": lambda graph: graph.bfs(banks)
+    "dfs": lambda graph: graph.dfs(),
+    "iterative": lambda graph: graph.iterative_dfs(),
+    "bfs": lambda graph: graph.bfs()
 }
+def main():
+    start_time = time.time()
+    graph = Graph(operators, validate_function, banks)
+    mode = graph.ask_mode()
+    options[mode](graph)
+    print("It took", time.time() - start_time, "seconds to complete the computation.")
 
-options["dfs"](Graph(15, operators, validate_function))
+if __name__ == "__main__":
+    main()
