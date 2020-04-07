@@ -1,4 +1,4 @@
-from TP1.tp1_graph import Graph
+from uninformed_search import Graph
 import time
 
 

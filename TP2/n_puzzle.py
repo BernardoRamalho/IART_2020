@@ -2,7 +2,7 @@ import random
 import math
 import copy
 import time
-from tp2_graph import Graph
+from uninformed_search import Graph
 
 
 ##############################
@@ -18,12 +18,11 @@ def get_zero_position(board):
             if board[i][j] == 0:
                 return i, j
 
-
 def validate_n_puzzle(board):
     width = 0
     height = 0
 
-    for i in range(1, len(board)*len(board)):
+    for i in range(1, len(board) * len(board)):
 
         if board[height][width] != i:
             return False
@@ -33,8 +32,6 @@ def validate_n_puzzle(board):
         if width % 3 == 0:
             width = 0
             height += 1
-
-
 
     return True
 
@@ -129,6 +126,9 @@ def operators(board):
     if zero_position[0] - 1 >= 0:
         board_states.append(move_up(zero_position, copy.deepcopy(board_list)))
 
+    if not board_states:
+        print("Failed")
+        print(board)
     return board_states
 
 
@@ -159,19 +159,27 @@ options = {
 }
 
 
+def question_2_1_b(graph):
+    start_time = time.time()
+
+    graph.bfs()
+    print("It took", time.time() - start_time, "seconds to complete the computation.")
+
+
 def main():
     start_time = time.time()
+
     # Initialize the puzzle
     puzzle_size = int(input("Introduce a size (must be perfect squares like 9 and 16): "))
     puzzle = create_board(puzzle_size)
-    puzzles = ((1, 2, 3), (4, 5, 6), (7, 8, 0))
+    puzzles = ((1, 2, 3), (4, 5, 6), (7, 0, 8))
+
 
     # Initialize the graph
     graph = Graph(operators, validate_n_puzzle, puzzle)
 
-    # Run the Search
-    mode = graph.ask_mode()
-    options[mode](graph)
+    # Run the Exercises
+    question_2_1_b(graph)
     print("It took", time.time() - start_time, "seconds to complete the computation.")
 
 

@@ -49,11 +49,10 @@ class Graph:
 
             for i in self.graph[s]:
 
-                if self.validation_functions(s):
-                    print("HEy")
+                if self.validation_functions(i):
                     finished = False
-                    self.print_solution(s)
-                    print(n)
+                    self.print_solution(i)
+                    print("Depth reached:", n)
                     break
                 elif not visited[i]:
                     function(i, queue, visited, n)

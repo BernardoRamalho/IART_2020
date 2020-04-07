@@ -20,7 +20,7 @@ class Graph:
             node = self.reverse_graph[node][0]
 
         solution.insert(0, self.start_state)
-
+        print("Path Taken:")
         for i in solution:
             print(i)
 
@@ -49,11 +49,9 @@ class Graph:
 
             for i in self.graph[s]:
 
-                if self.validation_functions(s):
-                    print("HEy")
+                if self.validation_functions(i):
                     finished = False
-                    self.print_solution(s)
-                    print(n)
+                    self.print_solution(i)
                     break
                 elif not visited[i]:
                     function(i, queue, visited, n)
