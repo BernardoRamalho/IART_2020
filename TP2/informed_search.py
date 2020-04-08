@@ -14,13 +14,7 @@ class Node:
         return self.state == other.state
 
 
-def generate_children(father_node, operations, heuristic_func_number, end_state, open_list):
-    for i in operations(father_node.state):
-        child = Node(father_node, i, 0, 1)
-        heuristics.value_node(heuristic_func_number, child, end_state)
-        open_list[child.value] = child
-
-
+# Gets the index with the minimum value
 def get_minimum_value_index(open_list):
     min_value = 10000
     best_index = 0
@@ -44,7 +38,7 @@ def print_solution_path(node):
         print(i)
 
 
-def astar(start_state, end_state, operations, heuristic_func_number):
+def astar(start_state, end_state, operations):
     closed_list = []
     open_list = []
 
@@ -61,27 +55,82 @@ def astar(start_state, end_state, operations, heuristic_func_number):
         current_node = open_list.pop(current_index)
         closed_list.append(current_node)
 
+        # The program only finds a solution when you put a ending node into the closed list
         if current_node == ending_node:
             print_solution_path(current_node)
             break
 
         # Generate the children
         for i in operations(current_node.state):
+            # Create the node and calculate its value
             child = Node(current_node, i, 0, current_node.cost + 1)
-            heuristics.value_node(heuristic_func_number, child, end_state)
-            not_worth = False
+            heuristics.value_node(child, end_state)
 
+            # If the child is already in the closed list then discard it
             for closed_child in closed_list:
                 if closed_child == child:
                     continue
 
+            # If the child is in the open list and it has a smaller cost then change the one in the open list to the
+            # new child
             for open_child in open_list:
                 if open_child == child and open_child.cost > child.cost:
                     open_child.parent = child.parent
                     open_child.cost = child.cost
-                    heuristics.value_node(heuristic_func_number, open_child, end_state)
+                    heuristics.value_node(open_child, end_state)
                     break
 
+            # If the child is the ending node you don't need to check the other
+            if child == ending_node:
+                open_list.append(child)
+                break
+            else:
+                open_list.append(child)
+
+
+def greedy(start_state, end_state, operations):
+    closed_list = []
+    open_list = []
+
+    beggining_node = Node(None, start_state, 0)
+    ending_node = Node(None, end_state, 0)
+
+    open_list.append(beggining_node)
+
+    while len(open_list) > 0:
+
+        current_index = get_minimum_value_index(open_list)
+
+        # Popping the best node from the open_list and putting on the closed list (so it won't be seen again)
+        current_node = open_list.pop(current_index)
+        closed_list.append(current_node)
+
+        # The program only finds a solution when you put a ending node into the closed list
+        if current_node == ending_node:
+            print_solution_path(current_node)
+            break
+
+        # Generate the children
+        for i in operations(current_node.state):
+            # Create the node and calculate its value
+            child = Node(current_node, i, 0, 0)
+            heuristics.value_node(child, end_state)
+
+            # If the child is already in the closed list then discard it
+            for closed_child in closed_list:
+                if closed_child == child:
+                    continue
+
+            # If the child is in the open list and it has a smaller cost then change the one in the open list to the
+            # new child
+            for open_child in open_list:
+                if open_child == child and open_child.cost > child.cost:
+                    open_child.parent = child.parent
+                    open_child.cost = child.cost
+                    heuristics.value_node(open_child, end_state)
+                    break
+
+            # If the child is the ending node you don't need to check the other
             if child == ending_node:
                 open_list.append(child)
                 break

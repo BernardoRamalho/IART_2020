@@ -22,8 +22,8 @@ def calculate_manhattan_distance(state, end_state):
     return manhattan_distance
 
 
-def value_node(heuristic_number, node, end_state):
-    if heuristic_number == 1:
-        node.value = count_displaced_pieces(node.state, end_state) + node.cost
-    elif heuristic_number == 2:
-        node.value = calculate_manhattan_distance(node.state, end_state) + node.cost
+def value_node(node, end_state):
+    if node.state == end_state:
+        node.value = -1
+    node.value = count_displaced_pieces(node.state, end_state) + calculate_manhattan_distance(node.state,
+                                                                                              end_state) + node.cost
